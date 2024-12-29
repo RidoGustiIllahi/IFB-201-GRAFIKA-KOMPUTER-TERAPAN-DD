@@ -112,6 +112,20 @@ def drawPohon():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
+    PohonDaunRefleksi = refleksiSumbuY(PohonDaun)
+    glBegin(GL_TRIANGLES)
+    glColor3f(0.0, 1.0, 0.0)
+    for titik in PohonDaunRefleksi:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+    PohonBatangRefleksi = refleksiSumbuY(PohonBatang)
+    glBegin(GL_QUADS)
+    glColor3f(0.5882, 0.3882, 0.2784)
+    for titik in PohonBatangRefleksi:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
 def main():
     if not glfw.init():
         return
