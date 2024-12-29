@@ -31,6 +31,26 @@ def drawJalan():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
+    GarisTengah = [
+        [15, -260],
+        [-15, -260],
+        [-18, -360],
+        [18, -360],
+        [9, 60],
+        [-9, 60],
+        [-12, -60],
+        [12, -60],
+        [3, 280],
+        [-3, 280],
+        [-6, 200],
+        [6, 200]
+    ]
+    glBegin(GL_QUADS)
+    glColor3f(1.0, 1.0, 1.0)
+    for titik in GarisTengah:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
 def main():
     if not glfw.init():
         return
