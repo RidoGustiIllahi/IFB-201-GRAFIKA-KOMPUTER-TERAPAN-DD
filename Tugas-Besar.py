@@ -12,6 +12,16 @@ def refleksiSumbuY(objek):
 
     return (matrixA @ matrixB).tolist()
 
+def drawCircle(x, y, radius, segments=360, color=(1.0, 1.0, 1.0)):
+    glBegin(GL_POLYGON)
+    glColor3f(*color)
+    for i in range(segments):
+        angle = 2.0 * np.pi * i / segments  
+        x_offset = radius * np.cos(angle)
+        y_offset = radius * np.sin(angle)
+        glVertex2f(x + x_offset, y + y_offset)
+    glEnd()
+
 def drawJalan():
     Jalan = [
         [10, 360],
@@ -191,6 +201,49 @@ def drawMobil():
         glVertex2f(titik[0], titik[1])
     glEnd()
     
+def drawOrang():
+    drawCircle(187,-16,14, 360, (0.0, 0.0, 1.0))
+
+    Orang = [
+        [183, -31],
+        [197, -65],
+        [213, -60],
+        [199, -25],
+        [183, -31],
+        [176, -42],
+        [179, -53],
+        [188, -44],
+        [176, -42],
+        [179, -53],
+        [162, -49],
+        [162, -38],
+        [199, -25],
+        [204, -36],
+        [213, -35],
+        [218, -23],
+        [213, -35],
+        [218, -23],
+        [228, -45],
+        [221, -49],
+        [173, -94],
+        [182, -99],
+        [200, -68],
+        [192, -54],
+        [199, -64],
+        [207, -82],
+        [217, -69],
+        [213, -61],
+        [217, -69],
+        [207, -82],
+        [236, -78],
+        [236, -67]
+    ]
+    glBegin(GL_QUADS)
+    glColor3f(0.0, 0.0, 1.0)
+    for titik in Orang:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
 def main():
     if not glfw.init():
         return
@@ -213,6 +266,7 @@ def main():
         drawJalan()
         drawPohon()
         drawMobil()
+        drawOrang()
 
         glfw.swap_buffers(window)
         glfw.poll_events()
