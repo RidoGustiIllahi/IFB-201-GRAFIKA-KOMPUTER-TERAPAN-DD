@@ -51,6 +51,57 @@ def drawJalan():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
+def drawPohon():
+    PohonDaun = [
+        [280, -220],
+        [240, -160],
+        [200, -220],
+        [280, -190],
+        [240, -140],
+        [200, -190],
+        
+        [160, 50],
+        [140, 80],
+        [120, 50],
+        [160, 60],
+        [140, 90],
+        [120, 60],
+        
+        [75, 280],
+        [60, 300],
+        [45, 280],
+        [75, 290],
+        [60, 305],
+        [45, 290],
+    ]
+    glBegin(GL_TRIANGLES)
+    glColor3f(0.0, 1.0, 0.0)
+    for titik in PohonDaun:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+    
+    PohonBatang = [
+        [250, -220],
+        [230, -220],
+        [230, -260],
+        [250, -260],
+
+        [145, 30],
+        [135, 30],
+        [135, 50],
+        [145, 50],
+        
+        [65, 280],
+        [55, 280],
+        [55, 270],
+        [65, 270]
+    ]
+    glBegin(GL_QUADS)
+    glColor3f(0.5882, 0.3882, 0.2784)
+    for titik in PohonBatang:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
 def main():
     if not glfw.init():
         return
@@ -71,6 +122,7 @@ def main():
         glClear(GL_COLOR_BUFFER_BIT)
 
         drawJalan()
+        drawPohon()
 
         glfw.swap_buffers(window)
         glfw.poll_events()
