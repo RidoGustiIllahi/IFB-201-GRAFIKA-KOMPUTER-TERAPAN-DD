@@ -126,6 +126,71 @@ def drawPohon():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
+def drawMobil():
+    MobilBody = [
+        [-10, 360],
+        [10, 360],
+        [10, 354],
+        [-10, 354],
+        
+        [-12, 354],
+        [12, 354],
+        [12, 345],
+        [-12, 345],
+
+        [-11, 345],
+        [-9, 345],
+        [-9, 341],
+        [-11, 341],
+        
+        [11, 345],
+        [9, 345],
+        [9, 341],
+        [11, 341],
+
+        [-14, 352],
+        [-12, 352],
+        [-12, 350],
+        [-14, 350],
+        
+        [14, 352],
+        [12, 352],
+        [12, 350],
+        [14, 350],
+    ]
+    glBegin(GL_QUADS)
+    glColor3f(0.502, 0.0, 0.0)
+    for titik in MobilBody:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+    MobilKaca =[
+        [-8, 358],
+        [8, 358],
+        [8, 355],
+        [-8, 355],
+
+        [-10,349],
+        [-8,349],
+        [-8,348],
+        [-10,348],
+        
+        [10,349],
+        [8,349],
+        [8,348],
+        [10,348],
+
+        [-5, 347],
+        [5, 347],
+        [5, 346],
+        [-5, 346]
+    ]
+    glBegin(GL_QUADS)
+    glColor3f(1.0, 1.0, 1.0)
+    for titik in MobilKaca:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+    
 def main():
     if not glfw.init():
         return
@@ -147,6 +212,7 @@ def main():
 
         drawJalan()
         drawPohon()
+        drawMobil()
 
         glfw.swap_buffers(window)
         glfw.poll_events()
