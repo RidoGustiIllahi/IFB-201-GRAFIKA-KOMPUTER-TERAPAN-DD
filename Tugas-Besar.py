@@ -1,6 +1,16 @@
 import glfw
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import numpy as np
+
+def refleksiSumbuY(objek):
+    matrixA = np.array(objek)
+    matrixB = np.array([
+        [-1, 0],
+        [0, 1]
+    ])
+
+    return (matrixA @ matrixB).tolist()
 
 def drawJalan():
     Jalan = [
@@ -79,7 +89,7 @@ def drawPohon():
     for titik in PohonDaun:
         glVertex2f(titik[0], titik[1])
     glEnd()
-    
+
     PohonBatang = [
         [250, -220],
         [230, -220],
