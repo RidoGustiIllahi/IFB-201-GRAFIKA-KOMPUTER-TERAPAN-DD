@@ -15,6 +15,22 @@ def drawJalan():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
+    GarisPinggir = [
+        [8, 360],
+        [6, 360],
+        [160, -360],
+        [140, -360],
+        [-8, 360],
+        [-6, 360],
+        [-160, -360],
+        [-140, -360]
+    ]
+    glBegin(GL_QUADS)
+    glColor3f(1.0, 1.0, 1.0)
+    for titik in GarisPinggir:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
 def main():
     if not glfw.init():
         return
