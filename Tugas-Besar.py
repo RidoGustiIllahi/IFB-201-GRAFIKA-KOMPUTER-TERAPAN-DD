@@ -12,7 +12,28 @@ def refleksiSumbuY(objek):
 
     return (matrixA @ matrixB).tolist()
 
-def drawCircle(x, y, radius, segments=360, color=(1.0, 1.0, 1.0)):
+def rotasi(points, center, angle):
+
+    theta = np.radians(angle)
+
+    cos_theta = np.cos(theta)
+    sin_theta = np.sin(theta)
+    rotation_matrix = np.array([
+        [cos_theta, -sin_theta],
+        [sin_theta, cos_theta]
+    ])
+
+    translated_points = np.array(points) - np.array(center)
+
+    rotated_points = np.dot(translated_points, rotation_matrix.T)
+
+    final_points = rotated_points + np.array(center)
+
+    return final_points
+
+def drawCircle(TitikTengah, radius, segments=360, color=(1.0, 1.0, 1.0)):
+    x = TitikTengah[0]
+    y = TitikTengah[1]
     glBegin(GL_POLYGON)
     glColor3f(*color)
     for i in range(segments):
@@ -202,37 +223,45 @@ def drawMobil():
     glEnd()
     
 def drawOrang():
-    drawCircle(187,-16,14, 360, (0.0, 0.0, 1.0))
+    TitikTengah = [187, -16]
+    drawCircle(TitikTengah,14, 360, (0.0, 0.0, 1.0))
 
     Orang = [
         [183, -31],
         [197, -65],
         [213, -60],
         [199, -25],
+        
         [183, -31],
         [176, -42],
         [179, -53],
         [188, -44],
+        
         [176, -42],
         [179, -53],
         [162, -49],
         [162, -38],
+
         [199, -25],
         [204, -36],
         [213, -35],
         [218, -23],
+
         [213, -35],
         [218, -23],
         [228, -45],
         [221, -49],
+
         [173, -94],
         [182, -99],
         [200, -68],
         [192, -54],
+
         [199, -64],
         [207, -82],
         [217, -69],
         [213, -61],
+
         [217, -69],
         [207, -82],
         [236, -78],
@@ -241,6 +270,54 @@ def drawOrang():
     glBegin(GL_QUADS)
     glColor3f(0.0, 0.0, 1.0)
     for titik in Orang:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+def drawKincir():
+    TitikTengah = [325, -95]
+    TitikTengah2 = refleksiSumbuY(TitikTengah)
+    drawCircle(TitikTengah, 5, 360, (0.514, 0.361, 0.047))
+    drawCircle(TitikTengah2, 5, 360, (0.514, 0.361, 0.047))
+
+    Stick = [
+        [324, -91],
+        [326, -91],
+        [326, -70],
+        [324, -70]
+    ]
+    glBegin(GL_QUADS)
+    glColor3f(0.514, 0.361, 0.047)
+    for titik in Stick:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+    Stick2 = []
+    Stick2.extend(refleksiSumbuY(Stick))
+    glBegin(GL_QUADS)
+    glColor3f(0.514, 0.361, 0.047)
+    for titik in Stick2:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+    Baling =[
+        [324, -70],
+        [318, -80],
+        [324, -90]
+    ]
+    Baling.extend(rotasi(Baling, [325, -70], 90))
+    Baling.extend(rotasi(Baling, [325, -70], 180))
+    Baling.extend(rotasi(Baling, [325, -70], 270))
+    glBegin(GL_TRIANGLES)   
+    glColor3f(1.0, 1.0, 0.0)
+    for titik in Baling:
+        glVertex2f(titik[0], titik[1])
+    glEnd()    
+
+    Baling2 = []
+    Baling2.extend(refleksiSumbuY(Baling))
+    glBegin(GL_TRIANGLES)   
+    glColor3f(1.0, 1.0, 0.0)
+    for titik in Baling2:
         glVertex2f(titik[0], titik[1])
     glEnd()
 
@@ -267,6 +344,7 @@ def main():
         drawPohon()
         drawMobil()
         drawOrang()
+        drawKincir()
 
         glfw.swap_buffers(window)
         glfw.poll_events()
