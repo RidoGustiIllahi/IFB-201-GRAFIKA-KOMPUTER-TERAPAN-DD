@@ -280,7 +280,7 @@ def drawOrang():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
-def drawKincir():
+def drawKincir(angle):
     TitikTengah = [325, -95]
     TitikTengah2 = refleksiSumbuY(TitikTengah)
     drawCircle(TitikTengah, 5, 360, (0.514, 0.361, 0.047))
@@ -314,6 +314,8 @@ def drawKincir():
     Baling.extend(rotasi(Baling, [325, -70], 90))
     Baling.extend(rotasi(Baling, [325, -70], 180))
     Baling.extend(rotasi(Baling, [325, -70], 270))
+
+    Baling = rotasi(Baling, [325, -70], angle)
     glBegin(GL_TRIANGLES)   
     glColor3f(1.0, 1.0, 0.0)
     for titik in Baling:
@@ -322,6 +324,8 @@ def drawKincir():
 
     Baling2 = []
     Baling2.extend(refleksiSumbuY(Baling))
+
+    Baling2 = rotasi(Baling2, [-325, -70], angle*-1)
     glBegin(GL_TRIANGLES)   
     glColor3f(1.0, 1.0, 0.0)
     for titik in Baling2:
@@ -343,10 +347,11 @@ def main():
     gluOrtho2D(-360, 360, -360, 360)
     glMatrixMode(GL_MODELVIEW)
 
-    translasiX, translasiY = 0, -720
-    dx, dy = 0, 0
-    stepX = 2 if translasiX > 0 else -2
-    stepY = 2 if translasiY > 0 else -2
+    angle = 0
+    translasiXMobil, translasiYMobil = 0, -720
+    dxMobil, dyMobil = 0, 0
+    stepXMobil = 2 if translasiXMobil > 0 else -2
+    stepYMobil = 2 if translasiYMobil > 0 else -2
 
     while not glfw.window_should_close(window):
         glClearColor(0.133, 0.694, 0.298, 1.0)
@@ -355,18 +360,22 @@ def main():
         drawJalan()
         drawPohon()
 
-        if dx == translasiX:
-            dx = 0    
+        if ((dxMobil >= translasiXMobil) if translasiXMobil > 0 else (dxMobil <= translasiXMobil)):
+            dxMobil = 0    
         else:
-            dx += stepX   
-        if dy == translasiY:
-            dy = 0    
+            dxMobil += stepXMobil   
+        if ((dyMobil >= translasiYMobil) if translasiYMobil > 0 else (dyMobil <= translasiYMobil)):
+            dyMobil = 0    
         else:
-            dy += stepY           
-        drawMobil(dx, dy)
+            dyMobil += stepYMobil           
+        drawMobil(dxMobil, dyMobil)
         
         drawOrang()
-        drawKincir()
+
+        angle += 5
+        if angle >= 360:
+            angle -= 360
+        drawKincir(angle)
 
         glfw.swap_buffers(window)
         glfw.poll_events()
