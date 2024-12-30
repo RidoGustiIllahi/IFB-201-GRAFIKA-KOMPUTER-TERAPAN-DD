@@ -36,6 +36,10 @@ def translasi (points, dx, dy):
     translated_points = np.array(points) + np.array([dx, dy])
     return translated_points.tolist()
 
+def scaling(points, skala, center=(0, 0)):
+    scaled_points = (np.array(points) - np.array(center)) * skala + np.array(center)
+    return scaled_points.tolist()
+
 def drawCircle(TitikTengah, radius, segments=360, color=(1.0, 1.0, 1.0)):
     x = TitikTengah[0]
     y = TitikTengah[1]
@@ -162,7 +166,7 @@ def drawPohon():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
-def drawMobil(dx, dy):
+def drawMobil(dx, dy, skala):
     MobilBody = [
         [-10, 360],
         [10, 360],
@@ -195,6 +199,12 @@ def drawMobil(dx, dy):
         [14, 350],
     ]
     MobilBody = translasi(MobilBody, dx, dy)
+    KoorXBody = [vertex[0] for vertex in MobilBody]   
+    centerXBody = (max(KoorXBody) + min(KoorXBody))/2
+    KoorYBody = [vertex[1] for vertex in MobilBody]   
+    centerYBody = (max(KoorYBody) + min(KoorYBody))/2
+
+    MobilBody = scaling(MobilBody, skala, (centerXBody, centerYBody))
     glBegin(GL_QUADS)
     glColor3f(0.502, 0.0, 0.0)
     for titik in MobilBody:
@@ -223,6 +233,12 @@ def drawMobil(dx, dy):
         [-5, 346]
     ]
     MobilKaca = translasi(MobilKaca, dx, dy)
+    KoorXKaca = [vertex[0] for vertex in MobilKaca]   
+    centerXKaca = (max(KoorXKaca) + min(KoorXKaca))/2
+    KoorYKaca = [vertex[1] for vertex in MobilKaca]   
+    centerYKaca = (max(KoorYKaca) + min(KoorYKaca))/2
+
+    MobilKaca = scaling(MobilKaca, skala, (centerXKaca, centerYKaca))
     glBegin(GL_QUADS)
     glColor3f(1.0, 1.0, 1.0)
     for titik in MobilKaca:
@@ -348,11 +364,13 @@ def main():
     glMatrixMode(GL_MODELVIEW)
 
     angle = 0
+
     translasiXMobil, translasiYMobil = 0, -720
     dxMobil, dyMobil = 0, 0
-    stepXMobil = 2 if translasiXMobil > 0 else -2
-    stepYMobil = 2 if translasiYMobil > 0 else -2
+    stepXMobil = 5 if translasiXMobil > 0 else -5
+    stepYMobil = 5 if translasiYMobil > 0 else -5
 
+    skala = 1
     while not glfw.window_should_close(window):
         glClearColor(0.133, 0.694, 0.298, 1.0)
         glClear(GL_COLOR_BUFFER_BIT)
@@ -367,8 +385,12 @@ def main():
         if ((dyMobil >= translasiYMobil) if translasiYMobil > 0 else (dyMobil <= translasiYMobil)):
             dyMobil = 0    
         else:
-            dyMobil += stepYMobil           
-        drawMobil(dxMobil, dyMobil)
+            dyMobil += stepYMobil          
+        if (dxMobil == 0 and dyMobil == 0):
+            skala = 1
+        else:
+            skala += 0.07
+        drawMobil(dxMobil, dyMobil, skala)
         
         drawOrang()
 
