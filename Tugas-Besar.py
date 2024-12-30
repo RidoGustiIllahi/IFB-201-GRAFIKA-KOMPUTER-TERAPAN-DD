@@ -2,6 +2,7 @@ import glfw
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import numpy as np
+import time
 
 def refleksiSumbuY(objek):
     matrixA = np.array(objek)
@@ -30,6 +31,10 @@ def rotasi(points, center, angle):
     final_points = rotated_points + np.array(center)
 
     return final_points
+
+def translasi (points, dx, dy):
+    translated_points = np.array(points) + np.array([dx, dy])
+    return translated_points.tolist()
 
 def drawCircle(TitikTengah, radius, segments=360, color=(1.0, 1.0, 1.0)):
     x = TitikTengah[0]
@@ -157,7 +162,7 @@ def drawPohon():
         glVertex2f(titik[0], titik[1])
     glEnd()
 
-def drawMobil():
+def drawMobil(dx, dy):
     MobilBody = [
         [-10, 360],
         [10, 360],
@@ -189,6 +194,7 @@ def drawMobil():
         [12, 350],
         [14, 350],
     ]
+    MobilBody = translasi(MobilBody, dx, dy)
     glBegin(GL_QUADS)
     glColor3f(0.502, 0.0, 0.0)
     for titik in MobilBody:
@@ -216,6 +222,7 @@ def drawMobil():
         [5, 346],
         [-5, 346]
     ]
+    MobilKaca = translasi(MobilKaca, dx, dy)
     glBegin(GL_QUADS)
     glColor3f(1.0, 1.0, 1.0)
     for titik in MobilKaca:
@@ -336,18 +343,34 @@ def main():
     gluOrtho2D(-360, 360, -360, 360)
     glMatrixMode(GL_MODELVIEW)
 
+    translasiX, translasiY = 0, -720
+    dx, dy = 0, 0
+    stepX = 2 if translasiX > 0 else -2
+    stepY = 2 if translasiY > 0 else -2
+
     while not glfw.window_should_close(window):
         glClearColor(0.133, 0.694, 0.298, 1.0)
         glClear(GL_COLOR_BUFFER_BIT)
 
         drawJalan()
         drawPohon()
-        drawMobil()
+
+        if dx == translasiX:
+            dx = 0    
+        else:
+            dx += stepX   
+        if dy == translasiY:
+            dy = 0    
+        else:
+            dy += stepY           
+        drawMobil(dx, dy)
+        
         drawOrang()
         drawKincir()
 
         glfw.swap_buffers(window)
         glfw.poll_events()
+        time.sleep(0.1)
 
     glfw.terminate()
 
