@@ -13,6 +13,15 @@ def refleksiSumbuY(objek):
 
     return (matrixA @ matrixB).tolist()
 
+def refleksiXH(vertices, centerX):    
+    matrixA = np.array(vertices)
+    matrixB = np.array([
+        [-1,0],
+        [0,1]])
+    matrixC = np.array(
+        [2*(centerX), 0])
+    return ((matrixA @ matrixB)+matrixC).tolist()
+
 def rotasi(points, center, angle):
 
     theta = np.radians(angle)
@@ -245,51 +254,53 @@ def drawMobil(dx, dy, skala):
         glVertex2f(titik[0], titik[1])
     glEnd()
     
-def drawOrang():
-    TitikTengah = [187, -16]
-    drawCircle(TitikTengah,14, 360, (0.0, 0.0, 1.0))
-
+def drawOrang(dx, dy, refleksi):
+    TitikTengah = [[0, -16]]
     Orang = [
-        [183, -31],
-        [197, -65],
-        [213, -60],
-        [199, -25],
-        
-        [183, -31],
-        [176, -42],
-        [179, -53],
-        [188, -44],
-        
-        [176, -42],
-        [179, -53],
-        [162, -49],
-        [162, -38],
-
-        [199, -25],
-        [204, -36],
-        [213, -35],
-        [218, -23],
-
-        [213, -35],
-        [218, -23],
-        [228, -45],
-        [221, -49],
-
-        [173, -94],
-        [182, -99],
-        [200, -68],
-        [192, -54],
-
-        [199, -64],
-        [207, -82],
-        [217, -69],
-        [213, -61],
-
-        [217, -69],
-        [207, -82],
-        [236, -78],
-        [236, -67]
+        [-2, -31], 
+        [12, -65], 
+        [28, -60], 
+        [14, -25], 
+        [-2, -31], 
+        [-9, -42], 
+        [-6, -53], 
+        [3, -44], 
+        [-9, -42], 
+        [-6, -53], 
+        [-23, -49], 
+        [-23, -38], 
+        [14, -25], 
+        [19, -36], 
+        [28, -35], 
+        [33, -23], 
+        [28, -35], 
+        [33, -23], 
+        [43, -45], 
+        [36, -49], 
+        [-12, -94], 
+        [-3, -99], 
+        [15, -68], 
+        [7, -54], 
+        [14, -64], 
+        [22, -82], 
+        [32, -69], 
+        [28, -61], 
+        [32, -69], 
+        [22, -82], 
+        [51, -78], 
+        [51, -67]
     ]
+    KoorX = [vertex[0] for vertex in Orang]   
+    centerX = (max(KoorX) + min(KoorX))/2
+
+    if refleksi == True:
+        Orang = refleksiXH(Orang, centerX)
+        TitikTengah = refleksiXH(TitikTengah, centerX)
+
+    Orang = translasi(Orang, dx, dy)
+    TitikTengah = translasi(TitikTengah, dx, dy)
+
+    drawCircle(TitikTengah[0],14, 360, (0.0, 0.0, 1.0))
     glBegin(GL_QUADS)
     glColor3f(0.0, 0.0, 1.0)
     for titik in Orang:
@@ -297,10 +308,10 @@ def drawOrang():
     glEnd()
 
 def drawKincir(angle):
-    TitikTengah = [325, -95]
+    TitikTengah = [[325, -95]]
     TitikTengah2 = refleksiSumbuY(TitikTengah)
-    drawCircle(TitikTengah, 5, 360, (0.514, 0.361, 0.047))
-    drawCircle(TitikTengah2, 5, 360, (0.514, 0.361, 0.047))
+    drawCircle(TitikTengah[0], 5, 360, (0.514, 0.361, 0.047))
+    drawCircle(TitikTengah2[0], 5, 360, (0.514, 0.361, 0.047))
 
     Stick = [
         [324, -91],
@@ -367,11 +378,17 @@ def main():
 
     translasiXMobil, translasiYMobil = 0, -720
     dxMobil, dyMobil = 0, 0
-    stepXMobil = 5 if translasiXMobil > 0 else -5
-    stepYMobil = 5 if translasiYMobil > 0 else -5
+    stepXMobil = 8 if translasiXMobil > 0 else -8
+    stepYMobil = 8 if translasiYMobil > 0 else -8
+    
+    translasiXOrang, translasiYOrang = -185, 0
+    dxOrang, dyOrang = 0, 0
+    refleksi = False
 
     skala = 1
     while not glfw.window_should_close(window):
+        stepXOrang = 4 if translasiXOrang > 0 else -4
+        stepYOrang = 4 if translasiYOrang > 0 else -4
         glClearColor(0.133, 0.694, 0.298, 1.0)
         glClear(GL_COLOR_BUFFER_BIT)
 
@@ -392,7 +409,16 @@ def main():
             skala += 0.07
         drawMobil(dxMobil, dyMobil, skala)
         
-        drawOrang()
+        if ((dxOrang >= translasiXOrang) if translasiXOrang >= 0 else (dxOrang <= translasiXOrang)):
+            translasiXOrang = translasiXOrang*-1
+            refleksi = not refleksi
+        else:
+            dxOrang += stepXOrang   
+        if ((dyOrang >= translasiYOrang) if translasiYOrang >= 0 else (dyOrang <= translasiYOrang)):
+            translasiYOrang = translasiYOrang*-1
+        else:
+            dyOrang += stepYOrang 
+        drawOrang(dxOrang, dyOrang, refleksi)
 
         angle += 5
         if angle >= 360:
