@@ -10,7 +10,6 @@ def refleksiSumbuY(objek):
         [-1, 0],
         [0, 1]
     ])
-
     return (matrixA @ matrixB).tolist()
 
 def refleksiXH(vertices, centerX):    
@@ -23,20 +22,17 @@ def refleksiXH(vertices, centerX):
     return ((matrixA @ matrixB)+matrixC).tolist()
 
 def rotasi(points, center, angle):
-
     theta = np.radians(angle)
-
     cos_theta = np.cos(theta)
     sin_theta = np.sin(theta)
+
     rotation_matrix = np.array([
         [cos_theta, -sin_theta],
         [sin_theta, cos_theta]
     ])
 
     translated_points = np.array(points) - np.array(center)
-
     rotated_points = np.dot(translated_points, rotation_matrix.T)
-
     final_points = rotated_points + np.array(center)
 
     return final_points
@@ -45,8 +41,13 @@ def translasi (points, dx, dy):
     translated_points = np.array(points) + np.array([dx, dy])
     return translated_points.tolist()
 
-def scaling(points, skala, center=(0, 0)):
-    scaled_points = (np.array(points) - np.array(center)) * skala + np.array(center)
+def scaling(points, skala):
+    pointsX = [vertex[0] for vertex in points]   
+    centerX = (max(pointsX) + min(pointsX))/2
+    pointsY = [vertex[1] for vertex in points]   
+    centerY = (max(pointsY) + min(pointsY))/2
+
+    scaled_points = (np.array(points) - np.array((centerX, centerY))) * skala + np.array((centerX, centerY))
     return scaled_points.tolist()
 
 def drawCircle(TitikTengah, radius, segments=360, color=(1.0, 1.0, 1.0)):
@@ -63,237 +64,102 @@ def drawCircle(TitikTengah, radius, segments=360, color=(1.0, 1.0, 1.0)):
 
 def drawJalan():
     Jalan = [
-        [10, 360],
-        [-10, 360],
-        [-180, -360],
-        [180, -360]
+        [10, 360], [-10, 360],
     ]
+    Jalan.extend(refleksiSumbuY(translasi(scaling(Jalan, 18), 0, -720)))
+    GarisPinggir = [
+        [8, 360], [6, 360], [160, -360], [140, -360]
+    ]
+    GarisPinggir.extend(refleksiSumbuY(GarisPinggir))
+    GarisTengah = [
+        [15, -260], [-15, -260], [-18, -360], [18, -360],
+        [9, 60], [-9, 60], [-12, -60], [12, -60],
+        [3, 280], [-3, 280], [-6, 200], [6, 200]
+    ]
+
     glBegin(GL_QUADS)
     glColor3f(0.0, 0.0, 0.0)
     for titik in Jalan:
         glVertex2f(titik[0], titik[1])
-    glEnd()
 
-    GarisPinggir = [
-        [8, 360],
-        [6, 360],
-        [160, -360],
-        [140, -360],
-        [-8, 360],
-        [-6, 360],
-        [-160, -360],
-        [-140, -360]
-    ]
-    glBegin(GL_QUADS)
     glColor3f(1.0, 1.0, 1.0)
     for titik in GarisPinggir:
         glVertex2f(titik[0], titik[1])
-    glEnd()
-
-    GarisTengah = [
-        [15, -260],
-        [-15, -260],
-        [-18, -360],
-        [18, -360],
-        [9, 60],
-        [-9, 60],
-        [-12, -60],
-        [12, -60],
-        [3, 280],
-        [-3, 280],
-        [-6, 200],
-        [6, 200]
-    ]
-    glBegin(GL_QUADS)
-    glColor3f(1.0, 1.0, 1.0)
     for titik in GarisTengah:
         glVertex2f(titik[0], titik[1])
     glEnd()
 
 def drawPohon():
-    PohonDaun = [
-        [280, -220],
-        [240, -160],
-        [200, -220],
-        [280, -190],
-        [240, -140],
-        [200, -190],
-        
-        [160, 50],
-        [140, 80],
-        [120, 50],
-        [160, 60],
-        [140, 90],
-        [120, 60],
-        
-        [75, 280],
-        [60, 300],
-        [45, 280],
-        [75, 290],
-        [60, 305],
-        [45, 290],
-    ]
+    PohonDaun = [[360.5, -202.5], [280.5, -82.5], [200.5, -202.5], 
+                 [360.5, -142.5], [280.5, -42.5], [200.5, -142.5], 
+                 [177.5, 77.5], [137.5, 137.5], [97.5, 77.5], 
+                 [177.5, 97.5], [137.5, 157.5], [97.5, 97.5], 
+                 [90.5, 287.5], [60.5, 327.5], [30.5, 287.5], 
+                 [90.5, 307.5], [60.5, 337.5], [30.5, 307.5]]
+    PohonBatang = [[300.5, -202.5], [260.5, -202.5], [260.5, -282.5], [300.5, -282.5], 
+                   [147.5, 37.5], [127.5, 37.5], [127.5, 77.5], [147.5, 77.5], 
+                   [70.5, 287.5], [50.5, 287.5], [50.5, 267.5], [70.5, 267.5]]
+
     glBegin(GL_TRIANGLES)
-    glColor3f(0.0, 1.0, 0.0)
+    glColor3f(0.133, 0.545, 0.133)
     for titik in PohonDaun:
+        glVertex2f(titik[0], titik[1])
+    for titik in refleksiSumbuY(PohonDaun):
         glVertex2f(titik[0], titik[1])
     glEnd()
 
-    PohonBatang = [
-        [250, -220],
-        [230, -220],
-        [230, -260],
-        [250, -260],
-
-        [145, 30],
-        [135, 30],
-        [135, 50],
-        [145, 50],
-        
-        [65, 280],
-        [55, 280],
-        [55, 270],
-        [65, 270]
-    ]
     glBegin(GL_QUADS)
     glColor3f(0.5882, 0.3882, 0.2784)
     for titik in PohonBatang:
         glVertex2f(titik[0], titik[1])
-    glEnd()
-
-    PohonDaunRefleksi = refleksiSumbuY(PohonDaun)
-    glBegin(GL_TRIANGLES)
-    glColor3f(0.0, 1.0, 0.0)
-    for titik in PohonDaunRefleksi:
-        glVertex2f(titik[0], titik[1])
-    glEnd()
-
-    PohonBatangRefleksi = refleksiSumbuY(PohonBatang)
-    glBegin(GL_QUADS)
-    glColor3f(0.5882, 0.3882, 0.2784)
-    for titik in PohonBatangRefleksi:
+    for titik in refleksiSumbuY(PohonBatang):
         glVertex2f(titik[0], titik[1])
     glEnd()
 
 def drawMobil(dx, dy, skala):
     MobilBody = [
-        [-10, 360],
-        [10, 360],
-        [10, 354],
-        [-10, 354],
-        
-        [-12, 354],
-        [12, 354],
-        [12, 345],
-        [-12, 345],
-
-        [-11, 345],
-        [-9, 345],
-        [-9, 341],
-        [-11, 341],
-        
-        [11, 345],
-        [9, 345],
-        [9, 341],
-        [11, 341],
-
-        [-14, 352],
-        [-12, 352],
-        [-12, 350],
-        [-14, 350],
-        
-        [14, 352],
-        [12, 352],
-        [12, 350],
-        [14, 350],
+        [-10, 360], [10, 360], [10, 354], [-10, 354],        
+        [-12, 354], [12, 354], [12, 345], [-12, 345],
+        [-11, 345], [-9, 345], [-9, 341], [-11, 341],
+        [11, 345], [9, 345], [9, 341], [11, 341],
+        [-14, 352], [-12, 352], [-12, 350], [-14, 350], 
+        [14, 352], [12, 352], [12, 350], [14, 350],
     ]
     MobilBody = translasi(MobilBody, dx, dy)
-    KoorXBody = [vertex[0] for vertex in MobilBody]   
-    centerXBody = (max(KoorXBody) + min(KoorXBody))/2
-    KoorYBody = [vertex[1] for vertex in MobilBody]   
-    centerYBody = (max(KoorYBody) + min(KoorYBody))/2
+    MobilBody = scaling(MobilBody, skala)
+    MobilKaca =[
+        [-8, 358], [8, 358], [8, 355], [-8, 355],
+        [-10,349], [-8,349], [-8,348], [-10,348],
+        [10,349], [8,349], [8,348], [10,348],
+        [-5, 347], [5, 347], [5, 346], [-5, 346]
+    ]
+    MobilKaca = translasi(MobilKaca, dx, dy)
+    MobilKaca = scaling(MobilKaca, skala)
 
-    MobilBody = scaling(MobilBody, skala, (centerXBody, centerYBody))
     glBegin(GL_QUADS)
     glColor3f(0.502, 0.0, 0.0)
     for titik in MobilBody:
         glVertex2f(titik[0], titik[1])
-    glEnd()
 
-    MobilKaca =[
-        [-8, 358],
-        [8, 358],
-        [8, 355],
-        [-8, 355],
-
-        [-10,349],
-        [-8,349],
-        [-8,348],
-        [-10,348],
-        
-        [10,349],
-        [8,349],
-        [8,348],
-        [10,348],
-
-        [-5, 347],
-        [5, 347],
-        [5, 346],
-        [-5, 346]
-    ]
-    MobilKaca = translasi(MobilKaca, dx, dy)
-    KoorXKaca = [vertex[0] for vertex in MobilKaca]   
-    centerXKaca = (max(KoorXKaca) + min(KoorXKaca))/2
-    KoorYKaca = [vertex[1] for vertex in MobilKaca]   
-    centerYKaca = (max(KoorYKaca) + min(KoorYKaca))/2
-
-    MobilKaca = scaling(MobilKaca, skala, (centerXKaca, centerYKaca))
-    glBegin(GL_QUADS)
     glColor3f(1.0, 1.0, 1.0)
     for titik in MobilKaca:
         glVertex2f(titik[0], titik[1])
     glEnd()
     
 def drawOrang(dx, dy, refleksi):
-    TitikTengah = [[0, -16]]
-    Orang = [
-        [-2, -31], 
-        [12, -65], 
-        [28, -60], 
-        [14, -25], 
-        [-2, -31], 
-        [-9, -42], 
-        [-6, -53], 
-        [3, -44], 
-        [-9, -42], 
-        [-6, -53], 
-        [-23, -49], 
-        [-23, -38], 
-        [14, -25], 
-        [19, -36], 
-        [28, -35], 
-        [33, -23], 
-        [28, -35], 
-        [33, -23], 
-        [43, -45], 
-        [36, -49], 
-        [-12, -94], 
-        [-3, -99], 
-        [15, -68], 
-        [7, -54], 
-        [14, -64], 
-        [22, -82], 
-        [32, -69], 
-        [28, -61], 
-        [32, -69], 
-        [22, -82], 
-        [51, -78], 
-        [51, -67]
-    ]
-    KoorX = [vertex[0] for vertex in Orang]   
-    centerX = (max(KoorX) + min(KoorX))/2
+    TitikTengah = [[-14, -16]]
+    Orang = [[-16, -31], [-2, -65], [14, -60], [0, -25], 
+             [-16, -31], [-23, -42], [-20, -53], [-11, -44], 
+             [-23, -42], [-20, -53], [-37, -49], [-37, -38], 
+             [0, -25], [5, -36], [14, -35], [19, -23], 
+             [14, -35], [19, -23], [29, -45], [22, -49], 
+             [-26, -94], [-17, -99], [1, -68], [-7, -54], 
+             [0, -64], [8, -82], [18, -69], [14, -61], 
+             [18, -69], [8, -82], [37, -78], [37, -67]]
 
     if refleksi == True:
+        KoorX = [vertex[0] for vertex in Orang]   
+        centerX = (max(KoorX) + min(KoorX))/2
         Orang = refleksiXH(Orang, centerX)
         TitikTengah = refleksiXH(TitikTengah, centerX)
 
@@ -308,54 +174,148 @@ def drawOrang(dx, dy, refleksi):
     glEnd()
 
 def drawKincir(angle):
-    TitikTengah = [[325, -95]]
+    TitikTengah = [[238.0, -57.5]]
     TitikTengah2 = refleksiSumbuY(TitikTengah)
-    drawCircle(TitikTengah[0], 5, 360, (0.514, 0.361, 0.047))
-    drawCircle(TitikTengah2[0], 5, 360, (0.514, 0.361, 0.047))
+    Stick = [[236.0, -49.5], [240.0, -49.5], [240.0, -7.5], [236.0, -7.5]]
+    Stick2 = []
+    Stick2.extend(refleksiSumbuY(Stick))
+    Baling =[[236.0, -7.5], [224.0, -27.5], [236.0, -47.5]]
+    Baling2 = []
+    Baling2.extend(refleksiSumbuY(Baling))
+    TitikRotasi = [[238.0, -7.5]]
+    TitikRotasi2 = []
+    TitikRotasi2.extend(refleksiSumbuY(TitikRotasi))
+    Baling.extend(rotasi(Baling, TitikRotasi, 90))
+    Baling.extend(rotasi(Baling, TitikRotasi, 180))
+    Baling.extend(rotasi(Baling, TitikRotasi, 270))
+    Baling2.extend(rotasi(Baling2, TitikRotasi2, -90))
+    Baling2.extend(rotasi(Baling2, TitikRotasi2, -180))
+    Baling2.extend(rotasi(Baling2, TitikRotasi2, -270))
+    Baling = rotasi(Baling, TitikRotasi, angle)  
+    Baling2 = rotasi(Baling2, TitikRotasi2, -angle)
 
-    Stick = [
-        [324, -91],
-        [326, -91],
-        [326, -70],
-        [324, -70]
-    ]
+    drawCircle(TitikTengah[0], 10, 360, (0.514, 0.361, 0.047))
+    drawCircle(TitikTengah2[0], 10, 360, (0.514, 0.361, 0.047))
+
     glBegin(GL_QUADS)
     glColor3f(0.514, 0.361, 0.047)
     for titik in Stick:
         glVertex2f(titik[0], titik[1])
-    glEnd()
-
-    Stick2 = []
-    Stick2.extend(refleksiSumbuY(Stick))
-    glBegin(GL_QUADS)
-    glColor3f(0.514, 0.361, 0.047)
     for titik in Stick2:
         glVertex2f(titik[0], titik[1])
     glEnd()
 
-    Baling =[
-        [324, -70],
-        [318, -80],
-        [324, -90]
-    ]
-    Baling.extend(rotasi(Baling, [325, -70], 90))
-    Baling.extend(rotasi(Baling, [325, -70], 180))
-    Baling.extend(rotasi(Baling, [325, -70], 270))
-
-    Baling = rotasi(Baling, [325, -70], angle)
     glBegin(GL_TRIANGLES)   
     glColor3f(1.0, 1.0, 0.0)
     for titik in Baling:
         glVertex2f(titik[0], titik[1])
-    glEnd()    
-
-    Baling2 = []
-    Baling2.extend(refleksiSumbuY(Baling))
-
-    Baling2 = rotasi(Baling2, [-325, -70], angle*-1)
-    glBegin(GL_TRIANGLES)   
-    glColor3f(1.0, 1.0, 0.0)
     for titik in Baling2:
+        glVertex2f(titik[0], titik[1])
+    glEnd()  
+
+def drawRumahA():
+    RumahBaseA = [[128.5, 276.0], [128.5, 200.0], [298.5, 200.0], [298.5, 276.0]]
+    RumahBaseB = []
+    RumahBaseB.extend(scaling(RumahBaseA, 0.93))
+    RumahJndlA = [[140.5, 252.0], [140.5, 226.0], [166.5, 226.0], [166.5, 252.0]]
+    RumahJndlB = translasi(RumahJndlA, 36, 0)
+    RumahJndlC = translasi(RumahJndlA, 120, 0)
+    RumahPintu =[[210.5, 264.0], [210.5, 200.0], [250.5, 200.0], [250.5, 264.0]]
+    RumahHandle = [[240.5, 230.0], [240.5, 224.0], [244.5, 224.0], [244.5, 230.0]]
+    RumahKaca = []
+    RumahKaca.extend(scaling(RumahJndlA, 0.6))
+    RumahKaca.extend(scaling(RumahJndlB, 0.6))
+    RumahKaca.extend(scaling(RumahJndlC, 0.6))
+    RumahKaca.extend([[216.5, 248.0], [216.5, 206.0], [244.5, 206.0], [244.5, 248.0], 
+                      [244.5, 254.0], [244.5, 260.0], [216.5, 260.0], [216.5, 254.0]])
+    RumahAtapA = [[182.5, 324.0], [116.5, 288.0], [116.5, 276.0]]
+    RumahAtapB = [[310.5, 276.0], [310.5, 288.0], [244.5, 324.0]]
+
+    glBegin(GL_QUADS)
+    glColor3f(0.996, 0.729, 0.321)
+    for titik in RumahBaseA:
+        glVertex2f(titik[0], titik[1])
+
+    glColor3f(1.0, 1.0, 0.623)
+    for titik in RumahBaseB:
+        glVertex2f(titik[0], titik[1])
+    
+    glColor3f(0.408, 0.169, 0.184)
+    for titik in RumahJndlA:
+        glVertex2f(titik[0], titik[1])
+    for titik in RumahJndlB:
+        glVertex2f(titik[0], titik[1])
+    for titik in RumahJndlC:
+        glVertex2f(titik[0], titik[1])
+    for titik in RumahPintu:
+        glVertex2f(titik[0], titik[1])
+
+    glColor3f(0.765, 0.973, 0.988)
+    for titik in RumahKaca:
+        glVertex2f(titik[0], titik[1])
+
+    glColor3f(0.976, 0.953, 0.012)
+    for titik in RumahHandle:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+    glBegin(GL_POLYGON)
+    glColor3f(0.651, 0.427, 0.706)
+    for titik in RumahAtapA:
+        glVertex2f(titik[0], titik[1])
+    glColor3f(0.251, 0.098, 0.286)
+    for titik in RumahAtapB:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+def drawRumahB():
+    RumahBaseA = [[-301, 261], [-301, 135], [-98, 135], [-98, 261]]
+    RumahBaseB = []
+    RumahBaseB.extend(scaling(RumahBaseA, 0.93))
+    RumahJndlA = [[-281, 222], [-281, 174], [-243, 174], [-243, 222]]
+    RumahJndlB = translasi(RumahJndlA, 125, 0)
+    RumahPintu = [[-233, 241], [-233, 135], [-166, 135], [-166, 241]]
+    RumahHandle = [[-185, 183], [-185, 173], [-175, 173], [-175, 183]]
+    RumahKaca = []
+    RumahKaca.extend(scaling(RumahJndlA, 0.7))
+    RumahKaca.extend(scaling(RumahJndlB, 0.7))
+    RumahKaca.extend([[-224, 213], [-224, 144], [-175, 144], [-175, 213], 
+                      [-224, 232], [-224, 222], [-175, 222], [-175, 232]])
+    RumahAtapA = [[-214, 335], [-320, 280], [-320, 260]]
+    RumahAtapB = [[-79, 260], [-79, 280], [-185, 335]]
+
+    glBegin(GL_QUADS)
+    glColor3f(0.996, 0.729, 0.321)
+    for titik in RumahBaseA:
+        glVertex2f(titik[0], titik[1])
+
+    glColor3f(1.0, 1.0, 0.623)
+    for titik in RumahBaseB:
+        glVertex2f(titik[0], titik[1])
+    
+    glColor3f(0.408, 0.169, 0.184)
+    for titik in RumahJndlA:
+        glVertex2f(titik[0], titik[1])
+    for titik in RumahJndlB:
+        glVertex2f(titik[0], titik[1])
+    for titik in RumahPintu:
+        glVertex2f(titik[0], titik[1])
+
+    glColor3f(0.765, 0.973, 0.988)
+    for titik in RumahKaca:
+        glVertex2f(titik[0], titik[1])
+
+    glColor3f(0.976, 0.953, 0.012)
+    for titik in RumahHandle:
+        glVertex2f(titik[0], titik[1])
+    glEnd()
+
+    glBegin(GL_POLYGON)
+    glColor3f(0.651, 0.427, 0.706)
+    for titik in RumahAtapA:
+        glVertex2f(titik[0], titik[1])
+    glColor3f(0.251, 0.098, 0.286)
+    for titik in RumahAtapB:
         glVertex2f(titik[0], titik[1])
     glEnd()
 
@@ -374,25 +334,30 @@ def main():
     gluOrtho2D(-360, 360, -360, 360)
     glMatrixMode(GL_MODELVIEW)
 
-    angle = 0
-
-    translasiXMobil, translasiYMobil = 0, -720
+    translasiXMobil, translasiYMobil = 0, -800
     dxMobil, dyMobil = 0, 0
-    stepXMobil = 8 if translasiXMobil > 0 else -8
-    stepYMobil = 8 if translasiYMobil > 0 else -8
-    
-    translasiXOrang, translasiYOrang = -185, 0
+    skala = 1
+
+    translasiXOrang, translasiYOrang = -170, 0
     dxOrang, dyOrang = 0, 0
     refleksi = False
-
-    skala = 1
+    
+    angle = 0
     while not glfw.window_should_close(window):
-        stepXOrang = 4 if translasiXOrang > 0 else -4
-        stepYOrang = 4 if translasiYOrang > 0 else -4
+        stepMobil = 3.5
+        stepXMobil = stepMobil if translasiXMobil > 0 else -stepMobil
+        stepYMobil = stepMobil if translasiYMobil > 0 else -stepMobil
+        
+        stepOrang = 1.5
+        stepXOrang = stepOrang if translasiXOrang > 0 else -stepOrang
+        stepYOrang = stepOrang if translasiYOrang > 0 else -stepOrang
+
         glClearColor(0.133, 0.694, 0.298, 1.0)
         glClear(GL_COLOR_BUFFER_BIT)
 
         drawJalan()
+        drawRumahA()
+        drawRumahB()
         drawPohon()
 
         if ((dxMobil >= translasiXMobil) if translasiXMobil > 0 else (dxMobil <= translasiXMobil)):
@@ -406,7 +371,7 @@ def main():
         if (dxMobil == 0 and dyMobil == 0):
             skala = 1
         else:
-            skala += 0.07
+            skala += 0.05
         drawMobil(dxMobil, dyMobil, skala)
         
         if ((dxOrang >= translasiXOrang) if translasiXOrang >= 0 else (dxOrang <= translasiXOrang)):
@@ -427,7 +392,7 @@ def main():
 
         glfw.swap_buffers(window)
         glfw.poll_events()
-        time.sleep(0.1)
+        time.sleep(1/60)
 
     glfw.terminate()
 
